@@ -11,8 +11,6 @@ set_property(TARGET WinPixEventRuntime PROPERTY IMPORTED_IMPLIB
         )
 
 
-
-
 add_library(AGS SHARED IMPORTED)
 set_property(TARGET AGS PROPERTY IMPORTED_LOCATION
         ${THIRD_PARTY_GRAPHIS_DIR}/ags/ags_lib/lib/amd_ags_x64.dll
@@ -32,8 +30,6 @@ set_property(TARGET Nvapi PROPERTY IMPORTED_LOCATION
 target_include_directories(Nvapi INTERFACE ${THIRD_PARTY_GRAPHIS_DIR}/nvapi)
 
 
-
-
 add_library(DirectXShaderCompiler STATIC IMPORTED)
 set_property(TARGET DirectXShaderCompiler PROPERTY IMPORTED_LOCATION
         ${THIRD_PARTY_GRAPHIS_DIR}/DirectXShaderCompiler/lib/x64/dxcompiler.lib
@@ -43,8 +39,6 @@ add_library(VulkanMemoryAllocator INTERFACE)
 target_include_directories(VulkanMemoryAllocator INTERFACE
         ${THIRD_PARTY_GRAPHIS_DIR}/VulkanMemoryAllocator
         )
-
-
 
 
 add_library(D3D12MemoryAllocator INTERFACE)

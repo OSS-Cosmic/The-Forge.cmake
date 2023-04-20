@@ -1,93 +1,126 @@
 #  Graphics
 
+find_package(PkgConfig REQUIRED)
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/lua.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/cpu_features.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/eastl.cmake)
+
 file(GLOB THE_FORGE_SOURCES
     ${THE_FORGE_DIR}/Common_3/Graphics/*.cpp
-    ${THE_FORGE_DIR}/Application/*.cpp
-    ${THE_FORGE_DIR}/Application/Profiler/*.cpp
-    ${THE_FORGE_DIR}/Application/Fonts/*.cpp
-    ${THE_FORGE_DIR}/Application/UI/*.cpp
-    # Common_3
+    ${THE_FORGE_DIR}/Common_3/Application/*.cpp
+    ${THE_FORGE_DIR}/Common_3/Application/Profiler/*.cpp
+    ${THE_FORGE_DIR}/Common_3/Application/Fonts/FontSystem.cpp
+    # ${THE_FORGE_DIR}/Common_3/Application/UI/UI.cpp
+    ${FORGE_APP_DIR}/Common_3/Application/Profiler/*.cpp
     ${THE_FORGE_DIR}/Common_3/OS/WindowSystem/*.cpp
     ${THE_FORGE_DIR}/Common_3/OS/*.cpp
-    )
 
-if(THE_FORGE_SCRIPTING_LUA)
-    file(GLOB THE_FORGE_LUA_SCRIPTING_SOURCES
-        "${THE_FORGE_DIR}/Game/Scripting/*.cpp"
-        )
-    list(APPEND THE_FORGE_SOURCES ${THE_FORGE_LUA_SCRIPTING_SOURCES})
-endif()
-
+    ${THE_FORGE_DIR}/Common_3/Utilities/FileSystem/*.cpp
+    ${THE_FORGE_DIR}/Common_3/Utilities/Log/*.c
+    ${THE_FORGE_DIR}/Common_3/Utilities/Math/*.c
+    ${THE_FORGE_DIR}/Common_3/Utilities/MemoryTracking/*.c
+    ${THE_FORGE_DIR}/Common_3/Utilities/Threading/*.c
+    ${THE_FORGE_DIR}/Common_3/Utilities/*.c
+)
+add_library(TheForge STATIC ${THE_FORGE_SOURCES})
+target_link_directories(TheForge PUBLIC cpu_features imgui Eastl)
+target_include_directories(TheForge PUBLIC ${THE_FORGE_DIR})
 
 IF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     file(GLOB THE_FORGE_OS_DARWIN_SOURCES
-        ${THE_FORGE_DIR}/Common_3/OS/Linux/*.cpp)
-    list(APPEND THE_FORGE_SOURCES ${THE_FORGE_OS_DARWIN_SOURCES})
+        ${THE_FORGE_DIR}/Common_3/OS/Darwin/*.cpp)
+    target_sources(TheForge PRIVATE ${THE_FORGE_OS_DARWIN_SOURCES})
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     file(GLOB THE_FORGE_OS_WINDOWS_SOURCES
         ${THE_FORGE_DIR}/Common_3/OS/Windows/*.cpp)
-    list(APPEND THE_FORGE_SOURCES ${THE_FORGE_OS_WINDOWS_SOURCES})
+    target_sources(TheForge PRIVATE ${THE_FORGE_OS_WINDOWS_SOURCES})
 elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
+
     file(GLOB THE_FORGE_OS_LINUX_SOURCES
-        ${THE_FORGE_DIR}/Common_3/OS/Windows/*.cpp)
-    list(APPEND THE_FORGE_SOURCES ${THE_FORGE_OS_LINUX_SOURCES})
+        ${THE_FORGE_DIR}/Common_3/OS/Linux/*.cpp)
+    target_sources(TheForge PRIVATE ${THE_FORGE_OS_LINUX_SOURCES})
+
+    pkg_check_modules(GTK REQUIRED gtk+-3.0)
+
+    target_link_libraries(TheForge PRIVATE ${GTK_LIBRARIES})
+    target_include_directories(TheForge PRIVATE ${GTK_INCLUDE_DIRS})
 endif()
 
-if(THE_FORGE_INPUT_SYSTEM)     
-    list(APPEND THE_FORGE_SOURCES 
-        "${THE_FORGE_DIR}/Common_3/Application/InputSystem.cpp"
-        ${THE_FORGE_GA_INPUT_SOURCES})
+if(THE_FORGE_INPUT_SYSTEM)
+    target_sources(TheForge PRIVATE 
+        ${THE_FORGE_DIR}/Common_3/Application/InputSystem.cpp)
+    target_link_libraries( TheForge PRIVATE ga)
 endif()
-
-list(APPEND THE_FORGE_SOURCES 
-    ${THE_FORGE_SOURCES})
-
-if(THE_FORGE_METAL)
-    file(GLOB GRAPHICS_METAL_SRC
-        "${THE_FORGE_DIR}/Common_3/Graphics/Metal/*.mm")
-    list(APPEND THE_FORGE_SOURCES ${GRAPHICS_METAL_SRC})
-endif()
-if(THE_FORGE_VULKAN)
-    file(GLOB GRAPHICS_VULKAN_SRC
-        "${THE_FORGE_DIR}/Common_3/Graphics/Vulkan/*.cpp")    
-    list(APPEND THE_FORGE_SOURCES ${GRAPHICS_VULKAN_SRC})
-endif()
-if(THE_FORGE_D3D12)
-    file(GLOB GRAPHICS_D3D12_SRC
-        "${THE_FORGE_DIR}/Common_3/Graphics/Direct3D12/*.cpp")
-    list(APPEND THE_FORGE_SOURCES ${GRAPHICS_D3D12_SRC})
-endif()
-if(THE_FORGE_D3D11)
-    file(GLOB GRAPHICS_D3D11_SRC
-        "${THE_FORGE_DIR}/Common_3/Graphics/Direct3D11/*.cpp")
-    list(APPEND THE_FORGE_SOURCES ${GRAPHICS_D3D11_SRC})
-endif()
-if(THE_FORGE_OPENGLES)
-    file(GLOB GRAPHICS_OPENGLES_SRC
-        "${THE_FORGE_DIR}/Common_3/Graphics/OpenGLES/*.cpp")
-    list(APPEND THE_FORGE_SOURCES ${GRAPHICS_OPENGLES_SRC})
-endif()
-
-add_library(TheForge STATIC ${THE_FORGE_SOURCES})
-target_include_directories(TheForge PUBLIC ${THE_FORGE_DIR})
-target_link_directories(TheForge PUBLIC cpu_features)
 
 if(THE_FORGE_SCRIPTING_LUA)
-    include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/lua.cmake)
-    target_link_libraries( TheForge PUBLIC lua )
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/ga.cmake)
+    file(GLOB THE_FORGE_LUA_SCRIPTING_SOURCES
+            "${THE_FORGE_DIR}/Common_3/Game/Scripting/*.cpp"
+        )
+    target_sources(TheForge PRIVATE 
+        ${THE_FORGE_LUA_SCRIPTING_SOURCES})
+    target_link_libraries( TheForge PRIVATE lua )
 endif()
 
-if(THE_FORGE_INPUT_SYSTEM)     
-    include( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/ga.cmake)
-    target_link_libraries( TheForge PUBLIC ga )
+# Ozz Animation relies on the Resource Loader
+if(THE_FORGE_RESOURCE_LOADER OR THE_FORGE_OZZ_ANIMATION) 
+    if(THE_FORGE_OZZ_ANIMATION)
+        include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/ozz-animation.cmake)
+        file(GLOB THE_FORGE_OZZ_LOADER_SOURCES
+            ${THE_FORGE_DIR}/Common_3/Resources/AnimationSystem/Animation/*.cpp)
+        target_sources(TheForge PRIVATE 
+            ${THE_FORGE_OZZ_LOADER_SOURCES})
+    endif()
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/astc-encoder.cmake)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/cgltf.cmake)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/meshoptimizer.cmake)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/tinydds.cmake)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/TinyEXR.cmake)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/tinyimageformat.cmake)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/tinyktx.cmake)
+    
+    file(GLOB THE_FORGE_RESOURCE_LOADER_SOURCES
+        ${THE_FORGE_DIR}/Common_3/Renderer/ResourceLoader/*.cpp)
+    target_sources(TheForge PRIVATE 
+        ${THE_FORGE_RESOURCE_LOADER_SOURCES})
+        target_link_libraries( TheForge PRIVATE astc-encoder cgltf meshoptimizer tinydds TinyEXR tinyimageformat tinyktx )
+endif()
+
+if(THE_FORGE_METAL)
+    file(GLOB GRAPHICS_METAL_SOURCE
+        "${THE_FORGE_DIR}/Common_3/Graphics/Metal/*.mm")
+    target_sources(TheForge PRIVATE ${GRAPHICS_METAL_SOURCE})
 endif()
 
 if(THE_FORGE_VULKAN)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/volk.cmake)
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/SPIRV_Cross.cmake)
-    target_link_libraries( TheForge PUBLIC SPIRV_Cross )
-endif()
 
+    file(GLOB GRAPHICS_VULKAN_SOURCE
+        "${THE_FORGE_DIR}/Common_3/Graphics/Vulkan/*.cpp")    
+    target_sources(TheForge PRIVATE ${GRAPHICS_VULKAN_SOURCE})
+    target_link_libraries( TheForge PRIVATE SPIRV_Cross volk)
+endif()
+if(THE_FORGE_D3D12)
+    file(GLOB GRAPHICS_D3D12_SOURCE
+        "${THE_FORGE_DIR}/Common_3/Graphics/Direct3D12/*.cpp")
+    target_sources(TheForge PRIVATE ${GRAPHICS_D3D12_SOURCE})
+    target_link_libraries(TheForge PRIVATE D3D12MemoryAllocator )
+endif()
+if(THE_FORGE_D3D11)
+    file(GLOB GRAPHICS_D3D11_SOURCE
+        "${THE_FORGE_DIR}/Common_3/Graphics/Direct3D11/*.cpp")
+    target_sources(TheForge PRIVATE ${GRAPHICS_D3D11_SOURCE})
+endif()
 IF(THE_FORGE_D3D12 OR THE_FORGE_D3D11)
-    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/WinPixEventRuntime.cmake)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/WinPixEventRuntime.cmake)    
     target_link_libraries( TheForge PRIVATE WinPixEventRuntime )
 ENDIF()
+
+if(THE_FORGE_OPENGLES)
+    file(GLOB GRAPHICS_OPENGLES_SOURCE
+        "${THE_FORGE_DIR}/Common_3/Graphics/OpenGLES/*.cpp")
+    target_sources(TheForge PRIVATE ${GRAPHICS_OPENGLES_SOURCE})
+    target_compile_definitions( TheForge PRIVATE "GLES" )
+endif()
