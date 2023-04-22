@@ -25,8 +25,7 @@ file(GLOB THE_FORGE_SOURCES
     ${THE_FORGE_DIR}/Common_3/OS/*.cpp
 
     ${THE_FORGE_DIR}/Common_3/Resources/ResourceLoader/*.cpp
-    ${THE_FORGE_DIR}/Common_3/Utilities/ThirdParty/OpenSource/bstrlib/bstrlib.c
-    
+
     ${THE_FORGE_DIR}/Common_3/Utilities/FileSystem/*.cpp
     ${THE_FORGE_DIR}/Common_3/Utilities/Log/*.c
     ${THE_FORGE_DIR}/Common_3/Utilities/Math/*.c
@@ -35,7 +34,7 @@ file(GLOB THE_FORGE_SOURCES
     ${THE_FORGE_DIR}/Common_3/Utilities/*.c
 )
 add_library(TheForge STATIC ${THE_FORGE_SOURCES})
-target_link_directories(TheForge PUBLIC cpu_features imgui Eastl astc-encoder cgltf MeshOptimizer tinydds tinyEXR tinyimageformat tinyktx)
+target_link_libraries(TheForge PUBLIC cpu_features imgui Eastl astc-encoder cgltf MeshOptimizer tinydds tinyEXR tinyimageformat tinyktx)
 target_include_directories(TheForge PUBLIC ${THE_FORGE_DIR})
 
 IF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
