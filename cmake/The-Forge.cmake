@@ -37,16 +37,19 @@ target_include_directories(TheForge PUBLIC ${THE_FORGE_DIR})
 
 IF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     file(GLOB THE_FORGE_OS_DARWIN_SOURCES
-        ${THE_FORGE_DIR}/Common_3/OS/Darwin/*.cpp)
+        ${THE_FORGE_DIR}/Common_3/OS/Darwin/*.cpp
+        ${THE_FORGE_DIR}/Common_3/OS/Darwin/*.c)
     target_sources(TheForge PRIVATE ${THE_FORGE_OS_DARWIN_SOURCES})
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     file(GLOB THE_FORGE_OS_WINDOWS_SOURCES
-        ${THE_FORGE_DIR}/Common_3/OS/Windows/*.cpp)
+        ${THE_FORGE_DIR}/Common_3/OS/Windows/*.cpp
+        ${THE_FORGE_DIR}/Common_3/OS/Windows/*.c)
     target_sources(TheForge PRIVATE ${THE_FORGE_OS_WINDOWS_SOURCES})
 elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
     file(GLOB THE_FORGE_OS_LINUX_SOURCES
-        ${THE_FORGE_DIR}/Common_3/OS/Linux/*.cpp)
+        ${THE_FORGE_DIR}/Common_3/OS/Linux/*.cpp
+        ${THE_FORGE_DIR}/Common_3/OS/Linux/*.c)
     target_sources(TheForge PRIVATE ${THE_FORGE_OS_LINUX_SOURCES})
 
     pkg_check_modules(GTK REQUIRED gtk+-3.0)
