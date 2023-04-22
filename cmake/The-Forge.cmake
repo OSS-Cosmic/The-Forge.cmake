@@ -5,6 +5,7 @@ find_package(PkgConfig REQUIRED)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/lua.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/cpu_features.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/eastl.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/bstrlib.cmake)
 
 file(GLOB THE_FORGE_SOURCES
     ${THE_FORGE_DIR}/Common_3/Graphics/*.cpp
@@ -24,7 +25,7 @@ file(GLOB THE_FORGE_SOURCES
     ${THE_FORGE_DIR}/Common_3/Utilities/*.c
 )
 add_library(TheForge STATIC ${THE_FORGE_SOURCES})
-target_link_directories(TheForge PUBLIC cpu_features imgui Eastl)
+target_link_directories(TheForge PUBLIC cpu_features imgui Eastl bstrlib)
 target_include_directories(TheForge PUBLIC ${THE_FORGE_DIR})
 
 IF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
