@@ -24,7 +24,7 @@ file(GLOB THE_FORGE_SOURCES
     ${THE_FORGE_DIR}/Common_3/OS/WindowSystem/*.cpp
     ${THE_FORGE_DIR}/Common_3/OS/*.cpp
 
-    ${THE_FORGE_DIR}/Common_3/Resources/ResourceLoader/*.cpp)
+    ${THE_FORGE_DIR}/Common_3/Resources/ResourceLoader/*.cpp
 
     ${THE_FORGE_DIR}/Common_3/Utilities/FileSystem/*.cpp
     ${THE_FORGE_DIR}/Common_3/Utilities/Log/*.c
