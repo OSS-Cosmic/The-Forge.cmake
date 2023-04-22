@@ -24,6 +24,8 @@ file(GLOB THE_FORGE_SOURCES
     ${THE_FORGE_DIR}/Common_3/OS/WindowSystem/*.cpp
     ${THE_FORGE_DIR}/Common_3/OS/*.cpp
 
+    ${THE_FORGE_DIR}/Common_3/Resources/ResourceLoader/*.cpp)
+
     ${THE_FORGE_DIR}/Common_3/Utilities/FileSystem/*.cpp
     ${THE_FORGE_DIR}/Common_3/Utilities/Log/*.c
     ${THE_FORGE_DIR}/Common_3/Utilities/Math/*.c
@@ -75,7 +77,7 @@ if(THE_FORGE_SCRIPTING_LUA)
 endif()
 
 # Ozz Animation relies on the Resource Loader
-if(THE_FORGE_RESOURCE_LOADER OR THE_FORGE_OZZ_ANIMATION) 
+if(THE_FORGE_OZZ_ANIMATION) 
     if(THE_FORGE_OZZ_ANIMATION)
         include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/ozz-animation.cmake)
         file(GLOB THE_FORGE_OZZ_LOADER_SOURCES
@@ -83,12 +85,6 @@ if(THE_FORGE_RESOURCE_LOADER OR THE_FORGE_OZZ_ANIMATION)
         target_sources(TheForge PRIVATE 
             ${THE_FORGE_OZZ_LOADER_SOURCES})
     endif()
-    
-    file(GLOB THE_FORGE_RESOURCE_LOADER_SOURCES
-        ${THE_FORGE_DIR}/Common_3/Renderer/ResourceLoader/*.cpp)
-    target_sources(TheForge PRIVATE 
-        ${THE_FORGE_RESOURCE_LOADER_SOURCES})
-        target_link_libraries( TheForge PRIVATE  )
 endif()
 
 if(THE_FORGE_METAL)

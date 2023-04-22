@@ -12,7 +12,6 @@ option( THE_FORGE_BUILD_EXAMPLES        "Build examples"                        
 
 option( THE_FORGE_SCRIPTING_LUA        "Build Lua (IScripting.h)"                  ON)
 option( THE_FORGE_INPUT_SYSTEM         "Build Input System"                        ON)
-option( THE_FORGE_RESOURCE_LOADER      "Build Resource Loader"                     ON)
 option( THE_FORGE_OZZ_ANIMATION        "Build OZZ Animation System"                OFF)
 option( THE_FORGE_NOESIS_GUI           "Build Noesis GUI"                          ON)
 
