@@ -1,4 +1,4 @@
-if(TARGET bstrlib)
+if(TARGET nothingness)
     return()
 endif()
 
