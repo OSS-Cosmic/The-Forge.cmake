@@ -14,6 +14,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/TinyEXR.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/tinyimageformat.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/tinyktx.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/basis_universal.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/imgui.cmake)
 
 file(GLOB THE_FORGE_SOURCES
     ${THE_FORGE_DIR}/Common_3/Graphics/*.cpp
