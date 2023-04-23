@@ -126,3 +126,7 @@ if(THE_FORGE_OPENGLES)
     target_sources(TheForge PRIVATE ${GRAPHICS_OPENGLES_SOURCE})
     target_compile_definitions( TheForge PRIVATE "GLES" )
 endif()
+
+
+# Tools -------------------------------------------
+SET(FSL_COMPILER  "${THE_FORGE_DIR}/Common_3/Tools/ForgeShadingLanguage/fsl.py" CACHE INTERNAL "FSL Compiler")
