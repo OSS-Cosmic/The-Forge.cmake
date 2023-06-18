@@ -4,17 +4,16 @@ find_package(PkgConfig REQUIRED)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/lua.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/cpu_features.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/eastl.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/Bstr.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/astc-encoder.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/cgltf.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/meshoptimizer.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/tinydds.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/TinyEXR.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/tinyimageformat.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/tinyktx.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/basis_universal.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/imgui.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/zstd.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdParty/lz4.cmake)
 
 file(GLOB THE_FORGE_SOURCES
     ${THE_FORGE_DIR}/Common_3/Graphics/*.cpp
@@ -28,7 +27,7 @@ file(GLOB THE_FORGE_SOURCES
 
     ${THE_FORGE_DIR}/Common_3/Resources/ResourceLoader/*.cpp
 
-    ${THE_FORGE_DIR}/Common_3/Utilities/FileSystem/*.cpp
+    ${THE_FORGE_DIR}/Common_3/Utilities/FileSystem/*.c
     ${THE_FORGE_DIR}/Common_3/Utilities/Log/*.c
     ${THE_FORGE_DIR}/Common_3/Utilities/Math/*.c
     ${THE_FORGE_DIR}/Common_3/Utilities/MemoryTracking/*.c
@@ -36,7 +35,7 @@ file(GLOB THE_FORGE_SOURCES
     ${THE_FORGE_DIR}/Common_3/Utilities/*.c
 )
 add_library(TheForge STATIC ${THE_FORGE_SOURCES})
-target_link_libraries(TheForge PUBLIC cpu_features imgui Eastl astc-encoder cgltf Bstr basis_universal meshoptimizer tinydds tinyEXR tinyimageformat tinyktx)
+target_link_libraries(TheForge PUBLIC cpu_features imgui lz4 zstd cgltf Bstr basis_universal meshoptimizer tinydds  tinyimageformat tinyktx)
 target_include_directories(TheForge PUBLIC ${THE_FORGE_DIR})
 
 IF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
